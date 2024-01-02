@@ -41,11 +41,11 @@
 //     return 0;
 //  }
 //now i'll try to do it with dfs
+
 int visited[10001] = {0};
 int dfs(int** arr,int* last, int* ans, int node, int count, int n) {
    visited[node] = 1;
    count++;
-//   printf("%d %d %d\n", node,count, n);
    int d = count;
    if(count < n+1) {
    if(n != node) {
