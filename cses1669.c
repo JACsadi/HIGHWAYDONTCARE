@@ -12,7 +12,7 @@
 int n,m;
 typedef struct node {
    int edge;
-   int* adj;
+   int* adj;    
    bool visited;
    int p; 
    int count;
