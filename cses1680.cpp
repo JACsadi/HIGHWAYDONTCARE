@@ -1,4 +1,4 @@
-  #include <stdio.h>
+ #include <stdio.h>
   #include <stdarg.h>
   #include <string.h>
   #include <stdlib.h>
@@ -11,6 +11,8 @@
   #define ma(k, n) (k*) malloc(n*sizeof(k))
   #define ima(y, k, n) k* y = (k*) malloc(n*sizeof(k))
   #define sd(i) scanf("%d", &i)
+  #define Max(a,b) ((a) < (b) ? (b) : (a))
+  #define Min(a,b) ((a) > (b) ? (b) : (a))
   #define tcase int t;sd(t);for(int casee = 1; casee <= t; casee++)
   using namespace std;
   int n,m;
@@ -18,43 +20,34 @@
     int edge;
     int* adj;    
     int vis;
-    int p; 
-    int count;
+    int dis;
+    int nex;
   } node;
   node g[100005]; 
-  stack<int> q;
-  int last;
-  int dfs(int s) {
-    g[s].vis = 2;
-    int f = 0;
+  void dfs(int s) {
+    g[s].vis = 1;
+    if(s == n) {
+      g[s].dis = 1;
+      return;
+    }
     f(i,g[s].edge) {
       int next = g[s].adj[i];
-      if(g[next].vis == 2) {
-        f = 1;
-        q.push(next);
-        q.push(s);
-        last = next;
-        return f;
-      } else if(g[next].vis==0) {
-        f = dfs(next);
-        if(f == 1) {
-          q.push(s);
-          if(s == last) return 2;
-          return f;
-        } else if(f==2) return 2;
+      if(!g[next].vis) dfs(next);
+      if(g[next].dis) {
+        if(g[s].dis < g[next].dis+1) {
+          g[s].dis =  g[next].dis+1;
+          g[s].nex = next;
+        }
       }
     }
-    g[s].vis = 1;
-    return f;
   }
   int main() {
     sd(n);sd(m);
     f(i,n+1) {
       g[i].edge = 0;
-      g[i].adj = ma(int,0);
       g[i].vis = 0;
-      g[i].p = 0;
-      g[i].count = -1;
+      g[i].dis = 0;
+      g[i].nex = 0;
     }
     f(i,m) {
       int a,b;
@@ -63,20 +56,13 @@
       g[a].adj = (int*) realloc(g[a].adj, g[a].edge*sizeof(int));
       g[a].adj[g[a].edge - 1] = b;
     }
-    int k = 1;
-    f(i,n+1) {
-      if(!g[i].vis) {
-        k = dfs(i);
-        if(k) {
-          printf("%d\n", q.size());
-          while (!q.empty()) {
-            printf("%d ", q.top());
-            q.pop();
-          }
-          break;
-          }
-      }
-    }
-    if(!k) printf("IMPOSSIBLE");
-    return 0;
+    dfs(1);
+    if(g[1].dis > 0) {
+    printf("%d\n", g[1].dis);
+    int i = 1;
+   while(i != 0) {
+    printf("%d ", i);
+    i = g[i].nex;
+   }
+    } else printf("IMPOSSIBLE");
   }
